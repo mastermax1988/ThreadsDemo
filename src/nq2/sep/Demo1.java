@@ -14,8 +14,8 @@ public class Demo1 {
     System.out.println("Thread 1 beendet.");
   }
 
-
-  private void workload(){
+  /** Das läuft jetzt parallel zum Hauptthread*/
+  private void workload() {
     try {
       Thread.sleep(1000);
     } catch (InterruptedException e) {

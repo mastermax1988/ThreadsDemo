@@ -13,8 +13,8 @@ public class Demo3WaitNotify {
     run = true;
     apples = 0;
     appleJuices = 0;
-    Thread picker1 = new Thread(this::pickerWork);
-    Thread picker2 = new Thread(this::pickerWork);
+    Thread picker1 = new Thread(() -> pickerWork(1));
+    Thread picker2 = new Thread(() -> pickerWork(2));
     Thread juice = new Thread(this::juiceFactoryWork);
     picker1.start();
     picker2.start();
@@ -26,7 +26,7 @@ public class Demo3WaitNotify {
     }
   }
 
-  private void pickerWork() {
+  private void pickerWork(int nr) {
     while (run) {
       try {
         Thread.sleep(rnd.get().nextInt(1000));
@@ -34,8 +34,8 @@ public class Demo3WaitNotify {
         e.printStackTrace();
       }
       synchronized (this) { // nur ein Thread darf auf die Variable apples zugreifen
-        apples++;
-        System.out.println("Apples: " + apples);
+        apples+=rnd.get().nextInt(1,4);
+        System.out.println("[" + nr + "] Apples: " + apples);
         notifyAll(); // alle schlafenden threads wecken
       }
     }

@@ -5,19 +5,21 @@ public class Demo2Propper {
   private volatile int counter;
 
   public void demo() {
-    int anz = 10000000;
-    counter = 0;
-    Thread t1 = new Thread(() -> inc(anz));
-    Thread t2 = new Thread(() -> dec(anz));
-    t1.start();
-    t2.start();
-    try {
-      t1.join();
-      t2.join();
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    for (int i = 0; i < 10; i++) {
+      int anz = 10000;
+      counter = 0;
+      Thread t1 = new Thread(() -> inc(anz));
+      Thread t2 = new Thread(() -> dec(anz));
+      t1.start();
+      t2.start();
+      try {
+        t1.join();
+        t2.join();
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
+      System.out.println(counter); //ausgabe immer 0, da synchronized
     }
-    System.out.println(counter);
   }
 
   private synchronized void inc(int anz) {
