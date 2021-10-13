@@ -1,7 +1,7 @@
 package nq2.sep;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 public class Demo4ThreadPool {
 
@@ -12,13 +12,13 @@ public class Demo4ThreadPool {
     running = true;
     // executors ist ein threadpool, der maximal 10 threads zeitgleich laufen lässt. beim servercode
     // ist dies z.b. eine elegante möglichkeit, die eingehenden verbindungen zu limitieren.
-    ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(anz);
+    ExecutorService executor =  Executors.newFixedThreadPool(anz);
     for (int i = 0; i < anz; i++) {
       // workaround, da ich die zählvariable nicht übergeben darf; hier erstmal ignorieren.
       // wenn man selbst drauf stößt, wird man von intellij auf diesen workaround
       // hingewiesen.
       int finalI = i;
-      executor.execute(() -> spam(finalI));
+      executor.submit(() -> spam(finalI));
     }
 
     try {
