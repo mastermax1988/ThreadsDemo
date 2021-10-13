@@ -10,9 +10,14 @@ public class Demo4ThreadPool {
   public void demo() {
     int anz = 10;
     running = true;
+    // executors ist ein threadpool, der maximal 10 threads zeitgleich laufen lässt. beim servercode
+    // ist dies z.b. eine elegante möglichkeit, die eingehenden verbindungen zu limitieren.
     ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(anz);
     for (int i = 0; i < anz; i++) {
-      int finalI = i; // workaround, da ich die zählvariable nicht übergeben kann
+      // workaround, da ich die zählvariable nicht übergeben darf; hier erstmal ignorieren.
+      // wenn man selbst drauf stößt, wird man von intellij auf diesen workaround
+      // hingewiesen.
+      int finalI = i;
       executor.execute(() -> spam(finalI));
     }
 
@@ -22,14 +27,16 @@ public class Demo4ThreadPool {
       e.printStackTrace();
     }
     running = false;
-    executor
-        .shutdownNow(); // Threadpool beenden, da ansonsten das Programm nicht ordentlich beendet
-                        // wird
+    // Threadpool beenden, da ansonsten das Programm nicht ordentlich beendet wird. die einzelnen
+    // threads machen zwar nichts mehr, existieren aber noch.
+    executor.shutdownNow();
+    System.out.println("shutdown");
   }
 
   private void spam(int i) {
     while (running) {
       System.out.println(i);
     }
+    System.out.println("running is false");
   }
 }

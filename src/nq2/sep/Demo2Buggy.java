@@ -1,15 +1,16 @@
 package nq2.sep;
 
+/** Wenn 2 Threads auf die gleiche Variable zugreifen, kann es zu Problemen kommen.*/
 public class Demo2Buggy {
 
-  private int counter;
+  private int counter; //beide threads greifen zeitgleich auf diese variable zu
 
   public void demo() {
     for (int i = 0; i < 10; i++) {
       int anz = 10000;
       counter = 0;
-      Thread t1 = new Thread(() -> inc(anz));
-      Thread t2 = new Thread(() -> dec(anz));
+      Thread t1 = new Thread(() -> inc(anz)); //t1 erhöht counter
+      Thread t2 = new Thread(() -> dec(anz)); //t2 verringert counter
       t1.start();
       t2.start();
       try {

@@ -33,27 +33,32 @@ public class Demo3WaitNotify {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-      synchronized (this) { // nur ein Thread darf auf die Variable apples zugreifen
-        apples+=rnd.get().nextInt(1,4);
+      // nur ein thread darf auf apples zugreifen; da beide picker zeitgleich schlafen dürfen, aber
+      // nur genau ein thread zeitgleich auf apples zugreifen darf, wird hier nur der zugriff
+      // synchronized markiert.
+      synchronized (this) {
+        apples += rnd.get().nextInt(1, 4);
         System.out.println("[" + nr + "] Apples: " + apples);
         notifyAll(); // alle schlafenden threads wecken
+        // notify(); würde genau einen zufällig ausgewählten schlafenden thread wecken; ginge hier
+        // auch
       }
     }
   }
 
-  private synchronized void
-      juiceFactoryWork() { // die ganze methode ist synchronized; wenn sie sich mit wait schlafen
-                           // legt, dann können die anderen threads arbeiten
+  /** die ganze methode ist synchronized */
+  private synchronized void juiceFactoryWork() {
     while (run) {
       while (apples < 10) {
         try {
-          wait();
+          wait(); // dieser thread legt sich schlafen, bis er mit notify aufgeweckt wird und wacht
+          // genau hier wieder auf. Das ist kein busy waiting, der thread wird suspended.
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
       }
-      apples -= 10;
-      appleJuices++;
+      apples -= 10; //mache aus 10 äpfeln
+      appleJuices++; // einen apfelsaft
       System.out.println("Juices: " + appleJuices + ", " + apples + " apples left.");
       if (appleJuices > 5) {
         run = false;
